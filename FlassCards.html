@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Flashcards</title>
+        <style>
+            .body {
+                background: white;
+                font-family: Arial;
+            }
+            .flashcard-container{
+                text-align: center;
+            }
+            .flashcard {
+                width: 300px;
+                height: 400px;
+                margin: 20px auto;
+                cursor: pointer;
+                position: relative;
+            }
+            .card-front {
+                background-color: aquamarine;
+            }
+            .card-back {
+                background-color: aqua;                
+            }
+            .card-front, .card-back{
+                height: 100%;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+            }
+            button {
+                margin: 10px;
+                font-size: 16px;
+                padding: 10px 20px;
+            }
+            .hidden {
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div id = 'flashcard-container' class="flashcard-container">
+
+            <h2>English to Spanish Flashcards</h2>
+
+            <div id="flashcard" class="flashcard">
+                <div id="cardFront" class="card-front"> Hello </div>
+                <div id="cardBack" class="card-back hidden"> Hola </div>
+            </div>
+
+            <div id="navButtons" class="nav-buttons">
+                <button name="prev" id="prev">Prev</button>
+                <button name="next" id="next">Next</button>
+            </div>
+
+        </div>
+
+        <script>
+
+            const cards = [
+                {front: "Hello",back: "Hola"}, { front: 'Goodbye', back: 'Adiós' }, { front: 'Thank you', back: 'Gracias' }, { front: 'Please', back: 'Por favor' },
+                { front: 'Yes', back: 'Sí' }, { front: 'No', back: 'No' }, { front: 'Excuse me', back: 'Disculpe' }, { front: 'I\'m sorry', back: 'Lo siento' },
+                { front: 'Good morning', back: 'Buenos días' }, { front: 'Good night', back: 'Buenas noches' }, { front: 'How are you?', back: '¿Cómo estás?' },
+                { front: 'I\'m fine', back: 'Estoy bien' }, { front: 'What\'s your name?',  back: '¿Cómo te llamas?' }, { front: 'My name is...', back: 'Me llamo...' },
+                { front: 'Where is...?', back: '¿Dónde está...?' }, { front: 'I don\'t understand', back: 'No entiendo' }, { front: 'Could you help me?',  back: '¿Podrías ayudarme?' },
+                { front: 'How much is it?', back: '¿Cuánto cuesta?' }, { front: 'I love you', back: 'Te quiero' }, { front: 'Cheers!', back: '¡Salud!' }
+            ];
+            const n = cards.length;
+            var cardIndex = 0;
+
+            const flashcard = document.getElementById('flashcard');
+            const cardFront = document.getElementById('cardFront');
+            const cardBack = document.getElementById('cardBack');
+            const next = document.getElementById('next');
+            const prev = document.getElementById('prev');
+
+            flashcard.addEventListener('click', () => {
+                cardFront.classList.toggle("hidden");
+                cardBack.classList.toggle("hidden")
+            })
+
+            function updateCard(){
+                cardFront.innerHTML = cards[cardIndex].front;
+                cardBack.innerHTML = cards[cardIndex].back;
+                cardFront.classList.remove("hidden");
+                cardBack.classList.add("hidden");
+            }
+
+            next.addEventListener('click', (e) => {
+                cardIndex = (cardIndex + 1) % n;  
+                updateCard();   
+            });
+
+            prev.addEventListener('click', (e) => {
+                cardIndex -= 1;
+                if(cardIndex < 0){
+                    cardIndex = n - 1;
+                }
+                updateCard();
+            });
+
+        </script>
+
+    </body>
+</html>
