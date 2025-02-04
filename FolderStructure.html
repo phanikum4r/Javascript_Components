@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Folder Structure</title>
+        <style>
+            .hidden {
+                display: none;
+            }
+            body {
+                font-family: Arial;
+                background-color: white;
+            }
+
+            #folder-container {
+                background: white;
+            }
+
+            .folder, .file {
+                align-items: center;
+                cursor: pointer;
+                padding: 5px;
+                margin-left: 15px;
+            }
+
+            .folder:hover {
+                background-color: yellow;
+            }
+
+            .folder {
+                font-weight: bold;
+            }
+
+            .icon {
+                margin-right: 8px;
+            }
+
+        </style>
+    </head>
+    <body>
+        <h1>Explorer</h1>
+        <div id = "folder-container"></div>
+        <script>
+            const root_folder = {
+                name: 'root',
+                isFolder: true,
+                children: [
+                    {
+                        name: 'src',
+                        isFolder: true,
+                        children: [
+                            {
+                                name: "index.js",
+                                isFolder: false
+                            },
+                            {
+                                name: "app.js",
+                                isFolder: false
+                            },
+                            {
+                                name: 'components',
+                                isFolder: true,
+                                children: [
+                                    {
+                                        name: 'header.js',
+                                        isFolder: false
+                                    },
+                                    {
+                                        name: 'main.js',
+                                        isFolder: false
+                                    },
+                                    {
+                                        name: 'footer.js',
+                                        isFolder: false
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        name: 'public',
+                        isFolder: true,
+                        children: [
+                            {
+                                name: 'data.json',
+                                isFolder: false
+                            },
+                            {
+                                name: 'icon.png',
+                                isFolder: false
+                            }
+                        ]
+                    },
+                    {
+                        name: 'package.json',
+                        isFolder: false
+                    },
+                    {
+                        name: 'index.html',
+                        isFolder: false
+                    }
+                ]
+
+            }
+
+            function createStructure(item, margin) {
+                const container = document.createElement('div');
+                
+                if(item.isFolder){
+                    const folderdiv = document.createElement('div');
+                    folderdiv.className = "folder";
+                    folderdiv.style.marginLeft = (margin * 20) + 'px';
+                    folderdiv.innerHTML = `<span class ='icon'> + </span> ${item.name}`;
+                    
+                    container.appendChild(folderdiv);
+
+                    folderdiv.addEventListener('click', (e) => {
+                        childContainer.classList.toggle("hidden");
+                        folderdiv.innerHTML = `<span class ='icon'> ${childContainer.classList.contains("hidden")? '+' : '-'} </span> ${item.name}`;
+                    });
+
+                    const childContainer = document.createElement('div');
+                    childContainer.className = "hidden";
+
+                    item.children.forEach(child => {
+                        childContainer.appendChild(createStructure(child, margin + 1));
+                    });
+
+                    container.appendChild(childContainer);
+                }
+                else{
+                    const filediv = document.createElement('div');
+                    filediv.className = "file";
+                    filediv.style.marginLeft = (margin * 20) + 'px';
+                    filediv.innerHTML = item.name;
+                    container.appendChild(filediv);
+                }
+
+                return container
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const folder_container = document.getElementById('folder-container');
+                folder_container.appendChild(createStructure(root_folder, 0));
+            })
+    
+        </script>
+    </body>
+</html>
