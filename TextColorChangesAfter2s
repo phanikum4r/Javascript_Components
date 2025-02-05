@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TextToDocument</title>
+        <style>
+            .body {
+                background-color: white;
+            }
+            div {
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <div>
+                <textarea name="textarea" id="textarea"></textarea>
+            </div>
+            <div id="documentDiv">
+            </div>
+        </div>
+
+        <script>
+            document.getElementById('textarea').addEventListener('keypress', e => {
+                if(e.key === 'Enter' && !e.shiftKey){
+                    e.preventDefault();
+                    let p = document.createElement('p');
+                    p.innerHTML = e.target.value;
+                    p.style.color = 'blue';
+                    e.target.value = "";
+                    document.getElementById('documentDiv').appendChild(p);
+                    setTimeout(() => {
+                        p.style.color = "";
+                    }, 2000);
+                }
+            })
+        </script>
+    </body>
+</html>
