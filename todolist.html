@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head>
+    <title>TODO LIST</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+    </style>
+  </head>
+  <body>
+    <div>
+      <h1>Todo List</h1>
+      <div>
+        <input type="text" id = 'textId' placeholder="Add your task" />
+        <div>
+          <button id = 'submit'>Submit</button>
+        </div>
+      </div>
+      <ul id = 'ulist'>
+        <li>
+          <span>Walk the dog</span>
+          <button>Delete</button>
+        </li>
+        <li>
+          <span>Water the plants</span>
+          <button>Delete</button>
+        </li>
+        <li>
+          <span>Wash the dishes</span>
+          <button>Delete</button>
+        </li>
+      </ul>
+    </div>
+    <script>
+        function handleSubmit() {
+            const textId = document.getElementById("textId");
+            const listItem = document.createElement("li");
+            const spanItem = document.createElement("span");
+            spanItem.innerHTML = textId.value + " ";
+            const buttonItem = document.createElement("button");
+            buttonItem.textContent = "Delete";
+            listItem.append(spanItem);
+            listItem.append(buttonItem);
+            textId.value = "";
+            document.getElementById("ulist").append(listItem);
+        }
+
+        document.getElementById("submit").addEventListener("click", handleSubmit);
+
+        document.getElementById("ulist").addEventListener("click", (event) => {
+            if (event.target.tagName === "BUTTON") {
+                event.target.parentElement.remove();
+            }
+        });
+    </script>
+  </body>
+</html>
