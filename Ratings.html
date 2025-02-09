@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Rating Widget</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+        .star-rating {
+            display: flex;
+            cursor: pointer;
+            font-size: 30px;
+            gap: 5px;
+        }
+        .star {
+            transition: transform 0.2s;
+        }
+        .star:hover {
+            transform: scale(1.1);
+        }
+        .filled {
+            color: gold;
+        }
+        .empty {
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Star Rating Widget</h2>
+
+    <div class="rating-container">
+        <div class="star-rating" data-max-stars="5" data-filled-stars="3"></div>
+        <div class="star-rating" data-max-stars="10" data-filled-stars="7"></div>
+    </div>
+
+    <script>
+        function createStarRating(container) {
+            const maxStars = parseInt(container.getAttribute("data-max-stars"), 10);
+            let filledStars = parseInt(container.getAttribute("data-filled-stars"), 10);
+            let selectedRating = filledStars; // Stores the clicked rating
+
+            function updateStars(count) {
+                container.querySelectorAll(".star").forEach((star, index) => {
+                    star.textContent = index < count ? "★" : "☆"; // Filled vs Empty star
+                    star.className = index < count ? "star filled" : "star empty";
+                });
+            }
+
+            function selectRating(count) {
+                selectedRating = count; // Store selected rating
+                filledStars = count;
+                updateStars(count);
+            }
+
+            function resetStars() {
+                updateStars(selectedRating); // Revert to last selected rating
+            }
+
+            // Clear container and create stars
+            container.innerHTML = "";
+            for (let i = 1; i <= maxStars; i++) {
+                const star = document.createElement("span");
+                star.className = i <= filledStars ? "star filled" : "star empty";
+                star.textContent = i <= filledStars ? "★" : "☆"; // Unicode Stars
+
+                // Attach event listeners
+                star.addEventListener("mouseover", () => updateStars(i));
+                star.addEventListener("click", () => selectRating(i));
+                container.appendChild(star);
+            }
+
+            container.addEventListener("mouseleave", () => resetStars());
+        }
+
+        // Initialize all star rating instances
+        document.querySelectorAll(".star-rating").forEach(createStarRating);
+    </script>
+
+</body>
+</html>
