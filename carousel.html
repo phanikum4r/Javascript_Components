@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Carousel</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;   
+        }
+        .carousel-container {
+            width: 300px;
+            height: 300px;
+            overflow: hidden;
+            position: relative;
+        }
+        .carousel {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+        .carousel img {
+            width: 100%;
+            height: 100%;
+        }
+        .prev, .next {
+            position: absolute;
+            top: 50%;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 50%;
+        }
+        .prev { left: 10px; }
+        .next { right: 10px; }
+        .dots {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .dot {
+            height: 12px;
+            width: 12px;
+            margin: 5px;
+            background-color: gray;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .dot.active {
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Dynamic Image Carousel</h2>
+
+    <div class="carousel-container">
+        <div class="carousel"></div>
+        <button class="prev"><</button>
+        <button class="next">></button>
+    </div>
+    <div class="dots"></div>
+
+    <script>
+        const imageArray = [
+            { imageUrl: "ep.png", altText: "Nature Image" },
+            { imageUrl: "ep.png", altText: "Water Image" },
+            { imageUrl: "ep.png", altText: "Forest Image" },
+            { imageUrl: "ep.png", altText: "Mountains Image" }
+        ];
+
+        const carousel = document.querySelector('.carousel');
+        const prevBtn = document.querySelector('.prev');
+        const nextBtn = document.querySelector('.next');
+        const dotsContainer = document.querySelector('.dots');
+        let index = 0;
+
+        // Function to generate images dynamically from the array
+        function loadImages() {
+            carousel.innerHTML = ""; // Clear previous images
+            dotsContainer.innerHTML = ""; // Clear previous dots
+            imageArray.forEach((img, i) => {
+                const imageElement = document.createElement("img");
+                imageElement.src = img.imageUrl;
+                imageElement.alt = img.altText;
+                carousel.appendChild(imageElement);
+
+                const dot = document.createElement("span");
+                dot.classList.add("dot");
+                if (i === 0) dot.classList.add("active");
+                dot.addEventListener("click", () => {
+                    index = i;
+                    updateCarousel();
+                });
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        function updateCarousel() {
+            carousel.style.transform = `translateX(-${index * 100}%)`;
+            updateDots();
+        }
+
+        function prevSlide() {
+            index = (index === 0) ? imageArray.length - 1 : index - 1;
+            updateCarousel();
+        }
+
+        function nextSlide() {
+            index = (index === imageArray.length - 1) ? 0 : index + 1;
+            updateCarousel();
+        }
+
+        function updateDots() {
+            document.querySelectorAll('.dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+
+        prevBtn.addEventListener('click', prevSlide);
+        nextBtn.addEventListener('click', nextSlide);
+
+        // Load images dynamically on page load
+        loadImages();
+        updateCarousel();
+
+        // Optional: Auto-play every 3 seconds
+        setInterval(nextSlide, 3000);
+    </script>
+
+</body>
+</html>
