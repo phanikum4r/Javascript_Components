@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form with Object Array Storage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 250px;
+            padding: 8px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: block;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+        button {
+            padding: 10px 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #218838;
+        }
+        .table-container {
+            margin-top: 20px;
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #ddd;
+        }
+        #search {
+            width: 260px;
+            padding: 8px;
+            margin: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Contact Form</h2>
+    
+    <form id="contactForm">
+        <input type="text" id="name" placeholder="Enter Name">
+        <div class="error" id="nameError"></div>
+
+        <input type="email" id="email" placeholder="Enter Email">
+        <div class="error" id="emailError"></div>
+
+        <input type="text" id="phone" placeholder="Enter Contact Number">
+        <div class="error" id="phoneError"></div>
+
+        <button type="submit">Add Contact</button>
+    </form>
+
+    <h3>Search Contact</h3>
+    <input type="text" id="search" placeholder="Search by Contact Number">
+
+    <div class="table-container">
+        <table id="contactTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dynamic rows will be added here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        let contacts = []; // Array to store contact objects
+
+        document.getElementById("contactForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+
+            const nameError = document.getElementById("nameError");
+            const emailError = document.getElementById("emailError");
+            const phoneError = document.getElementById("phoneError");
+
+            // Clear previous error messages
+            nameError.textContent = "";
+            emailError.textContent = "";
+            phoneError.textContent = "";
+
+            let isValid = true;
+
+            // Validation for Name (Only Letters & Min 2 characters)
+            if (!/^[A-Za-z\s]{2,}$/.test(name)) {
+                nameError.textContent = "Please enter a valid name (only letters, min 2 characters).";
+                isValid = false;
+            }
+
+            // Validation for Email
+            if (!/^\S+@\S+\.\S+$/.test(email)) {
+                emailError.textContent = "Please enter a valid email.";
+                isValid = false;
+            }
+
+            // Validation for Phone Number (10 digits)
+            if (!/^\d{10}$/.test(phone)) {
+                phoneError.textContent = "Please enter a valid 10-digit phone number.";
+                isValid = false;
+            }
+
+            if (isValid) {
+                // Add new contact to array
+                contacts.push({ name, email, phone });
+                updateTable(); // Refresh table with updated data
+                document.getElementById("contactForm").reset(); // Reset form
+            }
+        });
+
+        function updateTable() {
+            const tableBody = document.querySelector("#contactTable tbody");
+            tableBody.innerHTML = ""; // Clear existing table content
+
+            contacts.forEach(contact => {
+                const row = tableBody.insertRow();
+                row.insertCell(0).textContent = contact.name;
+                row.insertCell(1).textContent = contact.email;
+                row.insertCell(2).textContent = contact.phone;
+            });
+        }
+
+        // Search functionality
+        document.getElementById("search").addEventListener("input", function() {
+            const searchValue = this.value.trim();
+            const rows = document.querySelectorAll("#contactTable tbody tr");
+
+            rows.forEach(row => {
+                const phoneCell = row.cells[2].textContent;
+                if (searchValue === "" || phoneCell.startsWith(searchValue)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
