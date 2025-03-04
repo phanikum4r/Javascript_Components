@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Carousel</title>
+        <style>
+            .carousel-container{
+                width: 50%;
+                margin: auto;
+                overflow: hidden;
+                position: relative;
+            }
+            .carousel{
+                display: flex;
+                transition: 2s;
+            }
+            .slide{
+                min-width: 100%;
+                background-color: wheat;
+            }
+            #prev, #next{
+                position: absolute;
+                top: 50%;
+                border-radius: 50%;
+                border: none;
+                background-color: rgba(0,0,0,0.1);
+            }
+            #next{
+                right: 0;
+            }
+            .dots{
+                margin-top: 10px;
+                text-align: center;
+            }
+            .dot{
+                border-radius: 50%;
+                height: 16px;
+                width: 16px;
+                margin: 2px;
+                display: inline-block;
+                background-color: grey;
+            }
+            .active{
+                background-color: black;
+            }
+            
+        </style>
+    </head>
+    <body>
+        <div class = 'carousel-container'>
+            <div id="carousel" class="carousel">
+            </div>
+            <button id="prev"></button>
+            <button id="next"></button>
+        </div>
+        <div id="dots" class="dots">
+        </div>
+
+        <script>
+            const addresses = [
+                {
+                    name: "John Doe",
+                    street: "123 Main St",
+                    city: "New York",
+                    state: "NY",
+                    zip: "10001",
+                },
+                {
+                    name: "Jane Smith",
+                    street: "456 Oak Ave",
+                    city: "Los Angeles",
+                    state: "CA",
+                    zip: "90001",
+                },
+                {
+                    name: "Michael Johnson",
+                    street: "789 Pine Rd",
+                    city: "Chicago",
+                    state: "IL",
+                    zip: "60601",
+                }
+            ];
+
+            const carousel = document.getElementById('carousel');
+            const prev = document.getElementById('prev');
+            const next = document.getElementById('next');
+            const dots = document.getElementById('dots');
+            prev.innerHTML = '<';
+            next.innerHTML = '>';
+            let index = 0;
+
+            function addSlides(){
+                addresses.forEach((address, i) => {
+                    const slide = document.createElement('div');
+                    slide.className = 'slide';
+                    slide.innerHTML = `
+                    <h3>${address.name}</h3>
+                    <p> ${address.street} </p>
+                    <p>${address.city}, ${address.state}, ${address.zip}</p>
+                    `;
+                    carousel.append(slide);
+
+                    const dot = document.createElement('span');
+                    dot.className = 'dot';
+                    if(i === 0) dot.classList.add('active');
+                    dot.addEventListener('click', () => {
+                        index = i;
+                        updateCarousel();
+                    })
+                    dots.append(dot);
+                });
+            }
+
+            function updateCarousel(){
+                carousel.style.transform = `translateX(-${index * 100}%)`;
+                updateDots();
+            }
+
+            function updateDots(){
+                document.querySelectorAll('.dot').forEach((item, i) => {
+                    item.classList.toggle('active', i === index);
+                })
+            }
+
+            function nextSlide(){
+                index = (index === addresses.length - 1) ? 0 : index + 1;
+                updateCarousel();
+            }
+
+            function prevSlide(){
+                index = (index === 0) ? addresses.length - 1 : index - 1;
+                updateCarousel();
+            }
+            
+            next.addEventListener('click', nextSlide)
+            prev.addEventListener('click', prevSlide)
+
+            addSlides();
+            updateCarousel();
+
+            setInterval(nextSlide, 4000);
+
+        </script>
+    </body>
+</html>
