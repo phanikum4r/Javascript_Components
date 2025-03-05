@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color:beige;
+        }
+        h1{
+            margin: 10px;
+        }
+        .job{
+            background-color: white;
+            border-radius: 5px;
+            border: 1px solid lightgray;
+            padding: 10px;
+            margin: 10px;
+        }
+        button{
+            background-color: rgb(255, 123, 0);
+            padding: 7px 10px;
+            margin: 10px;
+            border-radius: 5px;
+            border: 1px solid;
+            color: white;
+        }
+    </style>
+  </head>
+  <body>
+    <h1 style="color: orange">Hacker News Jobs Board</h1>
+    <div id="jobs" class="jobs">
+    </div>
+    <button id="jobsButton">Load more jobs</button>
+    <script>
+        const jobsdiv = document.getElementById('jobs');
+        const jobsButton = document.getElementById('jobsButton');
+        let stories = [];
+        let index = 0;
+
+        async function fetchStories(){
+            try{
+            const response = await fetch('https://hacker-news.firebaseio.com/v0/jobstories.json', {
+                method: "GET",
+                headers: {"Content-Type": "application/json"},
+            })
+            stories = await response.json()
+            console.log(stories)
+            }
+            catch(error){
+            throw error;
+            }
+        }
+        fetchStories();
+
+        async function loadJobs(){ 
+            try{
+            let last = (index + 6 < stories.length) ? index + 6 : stories.length
+            for(let i = index; i < last; i++){
+                const response = await fetch(`https://hacker-news.firebaseio.com/v0/item/${stories[i]}.json`, {
+                method: "GET",
+                headers: {"Content-Type": "application/json"},
+                });
+                index += 1;
+                const result = await response.json();
+                console.log(result)
+                const job = document.createElement('div');
+                job.className = 'job';
+                job.innerHTML = `
+                <h3>${result.title}</h3>
+                <p>By ${result.by} . ${new Date(result.time).toLocaleDateString()}, ${new Date(result.time).toLocaleTimeString()} </p>
+                `
+                jobsdiv.append(job);
+            }
+            if(index >= stories.length) jobsButton.style.display = 'none';
+            }
+            catch(error){
+            throw error;
+            }
+        }
+
+        jobsButton.addEventListener('click', loadJobs);
+    </script>
+  </body>
+</html>
