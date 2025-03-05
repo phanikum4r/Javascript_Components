@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        .horizontal-div{
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            width: 200px;
+            margin: 10px auto;
+            height: 75px;
+            border-radius: 10px;
+        }
+
+        .vertical-div{
+            background-color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            width: 75px;
+            margin: auto;
+            height: 200px;
+            border-radius: 10px;
+        }
+
+        .light{
+            border-radius: 50%;
+            background-color: gray;
+            height: 50px;
+            width: 50px;
+        }
+
+        .light.red.active{
+            background-color: red;
+        }
+        .light.yellow.active{
+            background-color: yellow;
+        }
+        .light.green.active{
+            background-color: green;
+        }
+    </style>
+  </head>
+  <body>
+    <script>
+        const horizontalDiv = document.createElement('div');
+        horizontalDiv.classList.add('horizontal-div');
+        const red1 = document.createElement('div');
+        red1.classList ='light red';
+        const yellow1 = document.createElement('div');
+        yellow1.classList = 'light yellow';
+        const green1 = document.createElement('div');
+        green1.classList = 'light green';
+        document.body.append(horizontalDiv);
+        [red1, yellow1, green1].forEach(item => horizontalDiv.append(item))
+
+
+        const verticalDiv = document.createElement('div');
+        verticalDiv.classList.add('vertical-div');
+        const red2 = document.createElement('div');
+        red2.classList = 'light red';
+        const yellow2 = document.createElement('div');
+        yellow2.classList = 'light yellow';
+        const green2 = document.createElement('div');
+        green2.classList = 'light green';
+        document.body.append(verticalDiv);
+        [red2, yellow2, green2].forEach(item => verticalDiv.append(item))
+
+        const lights = document.querySelectorAll(".light");
+
+        function switchlights(){
+            setTimeout(() => {
+                setActiveLight('green');
+                setTimeout(() => {
+                    setActiveLight('yellow');
+                    setTimeout(() => {
+                        setActiveLight('red');
+                        switchlights();
+                    }, 500)
+                }, 3000)
+            }, 4000)
+        }
+
+        function setActiveLight(color){
+            lights.forEach(light => light.classList.remove('active'));
+            document.querySelectorAll(`.${color}`).forEach(light => {
+                light.classList.add('active')
+            })
+        }
+
+        document.querySelectorAll(".red").forEach(light => {
+            light.classList.add('active');
+        })
+        switchlights();
+
+    </script>
+  </body>
+</html>
