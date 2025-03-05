@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #222;
+            font-family: sans-serif;
+        }
+
+        .stopwatch-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 300px;
+        }
+
+        .stopwatch-display {
+            font-size: 2em;
+            background: black;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .buttons {
+            margin-top: 15px;
+        }
+
+        button {
+            font-size: 16px;
+            padding: 10px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #startStopBtn {
+            background: #28a745;
+            color: white;
+        }
+
+        #resetBtn {
+            background: #dc3545;
+            color: white;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="stopwatch-container">
+        <div id="display" class="stopwatch-display">00:00:00.00</div>
+        <div class="buttons">
+            <button id="startStopBtn">Start</button>
+            <button id="resetBtn">Reset</button>
+        </div>
+    </div>
+    <script>
+        let timer;
+        let startTime;
+        let elapsedTime = 0;
+        let isRunning = false;
+
+        const display = document.getElementById("display");
+        const startStopBtn = document.getElementById("startStopBtn");
+        const resetBtn = document.getElementById("resetBtn");
+
+        function formatTime(ms) {
+            const date = new Date(ms);
+            const hours = String(date.getUTCHours()).padStart(2, "0");
+            const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+            const seconds = String(date.getUTCSeconds()).padStart(2, "0");
+            const milliseconds = String(Math.floor((ms % 1000) / 10)).padStart(2, "0");
+            return `${hours}:${minutes}:${seconds}.${milliseconds}`;
+        }
+
+        function updateTime() {
+            const currentTime = Date.now();
+            elapsedTime = currentTime - startTime;
+            display.textContent = formatTime(elapsedTime);
+        }
+
+        function startStop() {
+            if (isRunning) {
+                clearInterval(timer);
+                isRunning = false;
+                startStopBtn.textContent = "Start";
+            } else {
+                startTime = Date.now() - elapsedTime;
+                timer = setInterval(updateTime, 10);
+                isRunning = true;
+                startStopBtn.textContent = "Stop";
+            }
+        }
+
+        function reset() {
+            clearInterval(timer);
+            elapsedTime = 0;
+            isRunning = false;
+            display.textContent = "00:00:00.00";
+            startStopBtn.textContent = "Start";
+        }
+
+        // Event Listeners
+        startStopBtn.addEventListener("click", startStop);
+        resetBtn.addEventListener("click", reset);
+        display.addEventListener("click", startStop);
+
+    </script>
+  </body>
+</html>
